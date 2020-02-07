@@ -172,7 +172,7 @@ namespace MSSQLTOMYSQLConverter
             System.Console.WriteLine("Usage example MSSQLTOMYSQLCONVETER [options] [commands]");
             System.Console.WriteLine("-u : Prompts for a username it should be an account that has access to view table relationships. ");
             System.Console.WriteLine("-password: requires a valid password for the current sql user");
-            System.Console.WriteLine("-d: the default database that will be used to generate a *.wsd diagram ");
+            System.Console.WriteLine("-d: the default database that will be used  ");
             System.Console.WriteLine("-a: the endpoint of the sql server, it could be a domain or an ip and if it doesn't run on the default port please specify it with ip:port");
             System.Console.WriteLine("-L: returns a list of saved database diagrams for quick access.");
             System.Console.WriteLine("-r: removes a record from the saved connections");
@@ -182,7 +182,7 @@ namespace MSSQLTOMYSQLConverter
             System.Console.WriteLine("                              Please include the commnds after the supplied options                         ");
             System.Console.WriteLine("-----------------------------------------------------------------------------------------------------------");
 
-            System.Console.WriteLine("-s: specify this command at the end of the new connection in order to save it for quick access in the future. Example rokono-cl -u User -password \"Password\" -a ip -d DatabaseName -file PathToWsdFile -s ");
+            System.Console.WriteLine("-s: specify this command at the end of the new connection in order to save it for quick access in the future. Example rokono-cl -u User -password \"Password\" -a ip -d DatabaseName  -s ");
             System.Console.WriteLine("-e: specify this command at the end of the new connection followed by -Connection ID in order to edit a record in the saved connections list.");
             System.Console.WriteLine("-r: specitfy this command after -Connection ID in order to remove a connection from the saved connections list.");
               System.Console.WriteLine("-Convert:Executes the queries needed to convert an existing MSSQL database to MySQL database, returns a text  creation script in the clipboard and a file in the main excution directory. Linux has known issue the clipboard doesn't wok!!!");
