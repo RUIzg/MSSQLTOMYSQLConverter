@@ -1,4 +1,4 @@
-MSSQLTOMYSQLCONVETER is rough a simple tool that converts MSSQL databases to MySql it was created under a day and its main purpose was to transfer few big databases between servers,
+MSSQLTOMYSQLCONVETER is a simple tool that converts MSSQL databases to MySql it was created under a day and its main purpose was to transfer few big databases between servers,
 the code behind is a mess but when i get time i will fix it, for now it works
 
 
