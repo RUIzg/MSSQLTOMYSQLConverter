@@ -16,25 +16,7 @@ namespace MSSQLTOMYSQLConverter
         private static string Ip {get; set;}
         static void Main(string[] args)
         {
-                args = new string[14];
-                args[0] = "-u";
-                args[1] = "kristifor";
-                args[2] = "-d";
-                args[3] = "RokonoControl";
-                args[4] = "-a";
-                args[5] = "192.168.1.3";
-                args[6] = "-file";
-                args[7] = "/home/kristifor/Projects/Games/StoriesUnraveled/Server/Slaves/StoriesUnraveledServer/schema.wsd";
-                args[8] = "-CP";
-                args[9] = "home/kristifor/Projects/Games/StoriesUnraveled/Server/Slaves/StoriesUnraveledServer/StoriesUntoldDataLaye/DbModels";
-                args[10] = "-password";
-                args[11] = ";;@Hanjolite";
-                args[13] = "-Convert";
-
-                // args = new string[3];
-                // args[0] = "-Connection";
-                // args[1] = "1";
-                // args[2] = "-Convert";
+              
               for(int i = 0; i < args.Length; i++)
             {
                 switch(args[i])
