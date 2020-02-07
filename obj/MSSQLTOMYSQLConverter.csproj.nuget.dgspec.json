@@ -1,0 +1,72 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/kristifor/Projects/GitClones/MSSQLTOMYSQLConverter/MSSQLTOMYSQLConverter.csproj": {}
+  },
+  "projects": {
+    "/home/kristifor/Projects/GitClones/MSSQLTOMYSQLConverter/MSSQLTOMYSQLConverter.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/kristifor/Projects/GitClones/MSSQLTOMYSQLConverter/MSSQLTOMYSQLConverter.csproj",
+        "projectName": "MSSQLTOMYSQLConverter",
+        "projectPath": "/home/kristifor/Projects/GitClones/MSSQLTOMYSQLConverter/MSSQLTOMYSQLConverter.csproj",
+        "packagesPath": "/home/kristifor/.nuget/packages/",
+        "outputPath": "/home/kristifor/Projects/GitClones/MSSQLTOMYSQLConverter/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/kristifor/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.6.1, )"
+            },
+            "TextCopy": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.101/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
