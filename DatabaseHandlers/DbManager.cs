@@ -63,11 +63,7 @@ namespace rokono_cl.DatabaseHandlers
         public OutboundTable GetTableData(string tableName)
         {
             var result = new OutboundTable();
-            result.Shape = new Shape();
-            result.Id = tableName;
-            result.Shape.Name = tableName;
-            result.Shape.Attribute = new List<BindingRow>();
-            result.Shape.Name = tableName;
+         
             var primaryAutoInc = string.Empty;
             var getPrimaryKey = ExecuteQuery($"SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{tableName}'and COLUMNPROPERTY(object_id(TABLE_NAME), COLUMN_NAME, 'IsIdentity') = 1");
             while (getPrimaryKey.Read())    
@@ -78,16 +74,7 @@ namespace rokono_cl.DatabaseHandlers
             SqlConnection.Close();
             var query =$"SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{tableName}'";
             var reader = ExecuteQuery(query);
-            // CREATE TABLE IF NOT EXISTS tasks (
-            //     task_id INT AUTO_INCREMENT PRIMARY KEY,
-            //     title VARCHAR(255) NOT NULL,
-            //     start_date DATE,
-            //     due_date DATE,
-            //     status TINYINT NOT NULL,
-            //     priority TINYINT NOT NULL,
-            //     description TEXT,
-            //     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            // )  ENGINE=INNODB;
+           
             var notNull = "NOT NULL";
             var tableData = $"CREATE TABLE IF NOT EXISTS {tableName} (";
             var localData = new List<BindingRowModel>();
@@ -241,7 +228,7 @@ namespace rokono_cl.DatabaseHandlers
 
                 break;
                 case "date":
-                    res = $"DATDATEETIME";
+                    res = $"DATE";
                 break;
 
                 case "time":
