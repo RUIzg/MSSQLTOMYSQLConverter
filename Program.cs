@@ -17,8 +17,7 @@ namespace MSSQLTOMYSQLConverter
         static void Main(string[] args)
         {
            
-
-              for(int i = 0; i < args.Length; i++)
+            for(int i = 0; i < args.Length; i++)
             {
                 switch(args[i])
                 {

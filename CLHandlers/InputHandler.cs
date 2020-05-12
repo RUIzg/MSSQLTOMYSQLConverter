@@ -50,7 +50,7 @@ namespace rokono_cl.CLHandlers
                 return null;
             var fileData = File.ReadAllText("SavedConnections.txt");
             return JsonConvert.DeserializeObject<List<SavedConnection>>(fileData).FirstOrDefault(x=>x.ConnectionId == int.Parse(conId));        
-        }
+        } 
 
 
          internal static void ConvertDatabase() 

@@ -34,7 +34,7 @@ namespace rokono_cl.DatabaseHandlers
             var result = string.Empty;
             var query = "SELECT tp.name 'Parent table', cp.name 'Column Id',tr.name 'Refrenced table',cr.name 'Corelation Name' FROM  sys.foreign_keys fk INNER JOIN  sys.tables tp ON fk.parent_object_id = tp.object_id INNER JOIN  sys.tables tr ON fk.referenced_object_id = tr.object_id INNER JOIN  sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id ORDER BY tp.name, cp.column_id";
             SqlCommand command = new SqlCommand(query, SqlConnection);
-
+            
             // Open the connection in a try/catch block. 
             // Create and execute the DataReader, writing the result
             // set to the console window.
@@ -44,11 +44,7 @@ namespace rokono_cl.DatabaseHandlers
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    // result.Add(new OutboundTableConnection{
-                    //         TableName = reader.GetString(0),
-                    //         ConnectionName = reader.GetString(2)
-
-                    // });
+                 
                         
                      result += $"ALTER TABLE {reader.GetString(0)} ADD FOREIGN KEY ({reader.GetString(1)}) REFERENCES {reader.GetString(2)}({reader.GetString(3)});";
                 }
@@ -60,7 +56,42 @@ namespace rokono_cl.DatabaseHandlers
             }
             return result;
         }
-        public OutboundTable GetTableData(string tableName)
+
+        public List<OutboundTableConnection> GetTableForignKeys()
+        {
+            var result = new List<OutboundTableConnection> ();
+            var query = "SELECT tp.name 'Parent table', cp.name 'Column Id',tr.name 'Refrenced table',cr.name 'Corelation Name' FROM  sys.foreign_keys fk INNER JOIN  sys.tables tp ON fk.parent_object_id = tp.object_id INNER JOIN  sys.tables tr ON fk.referenced_object_id = tr.object_id INNER JOIN  sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id ORDER BY tp.name, cp.column_id";
+            SqlCommand command = new SqlCommand(query, SqlConnection);
+
+            // Open the connection in a try/catch block. 
+            // Create and execute the DataReader, writing the result
+            // set to the console window.
+            try
+            {
+                SqlConnection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(new OutboundTableConnection{
+                            TableName = reader.GetString(2),
+                            ConnectionName = reader.GetString(3)
+
+                    });
+                        
+                    //  result += $"ALTER TABLE {reader.GetString(0)} ADD FOREIGN KEY ({reader.GetString(1)}) REFERENCES {reader.GetString(2)}({reader.GetString(3)});";
+                }
+                reader.Close();
+                SqlConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return result;
+        }
+        
+        
+        public OutboundTable GetTableData(string tableName, List<OutboundTableConnection> foreginKeys)
         {
             var result = new OutboundTable();
          
@@ -89,6 +120,12 @@ namespace rokono_cl.DatabaseHandlers
                 
 
                 if(reader.GetString(0) == primaryAutoInc)
+                    localData.Add(new BindingRowModel{
+                        TableName = reader.GetString(0),
+                        DataType = $"INT AUTO_INCREMENT PRIMARY KEY",
+                        IsNull = notNull
+                    });
+                else if( foreginKeys.Any(x=>x.TableName == tableName && x.ConnectionName == reader.GetString(0)))
                     localData.Add(new BindingRowModel{
                         TableName = reader.GetString(0),
                         DataType = $"INT AUTO_INCREMENT PRIMARY KEY",
@@ -270,7 +307,7 @@ namespace rokono_cl.DatabaseHandlers
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects).
+                    SqlConnection.Close();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

@@ -18,8 +18,10 @@ namespace rokono_cl.Data_Hanlders
 
                 var tables = context.GetTables();
                 var dbCreationScript = string.Empty;
+                var tablesForeignKeys = context.GetTableForignKeys();
+                
                 tables.ForEach(x=>{
-                    var od = context.GetTableData(x);
+                    var od = context.GetTableData(x,tablesForeignKeys);
                     System.Console.WriteLine(od.CreationgString);
                     dbCreationScript += od.CreationgString;
                 });
