@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using MSSQLTOMYSQLConverter;
 using MSSQLTOMYSQLConverter.Data_Hanlders;
 using rokono_cl.DatabaseHandlers;
 using RokonoDbManager.Models;
@@ -18,18 +19,24 @@ namespace rokono_cl.Data_Hanlders
 
                 var tables = context.GetTables();
                 var dbCreationScript = string.Empty;
+                if(Program.DataBackup)
+                    dbCreationScript += "SET GLOBAL FOREIGN_KEY_CHECKS=0;";
                 var tablesForeignKeys = context.GetTableForignKeys();
                 
                 tables.ForEach(x=>{
+                    if(Program.DataBackup)
+                        dbCreationScript += context.GetTableRows(x);
                     var od = context.GetTableData(x,tablesForeignKeys);
                     System.Console.WriteLine(od.CreationgString);
-                    dbCreationScript += od.CreationgString;
+                    dbCreationScript += $"{od.CreationgString}\r\n";
                 });
                 
                 var corelationData = context.GetDbUmlData();
                 dbCreationScript += corelationData;
                //d System.Windows.Forms.Clipboard.SetText(dbCreationScript);
                System.Console.WriteLine("Clipboard middleware xclip for Linux is required otherwise the application throws an exception!");
+                if(Program.DataBackup)
+                    dbCreationScript += "SET GLOBAL FOREIGN_KEY_CHECKS=1;";
 
 
                 if(!File.Exists($"{dbName}.sql"))

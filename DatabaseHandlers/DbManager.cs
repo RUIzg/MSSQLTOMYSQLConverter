@@ -4,6 +4,7 @@ namespace rokono_cl.DatabaseHandlers
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
     using MSSQLTOMYSQLConverter.Models;
@@ -46,7 +47,7 @@ namespace rokono_cl.DatabaseHandlers
                 {
                  
                         
-                     result += $"ALTER TABLE {reader.GetString(0)} ADD FOREIGN KEY ({reader.GetString(1)}) REFERENCES {reader.GetString(2)}({reader.GetString(3)});";
+                     result += $"ALTER TABLE {reader.GetString(0)} ADD FOREIGN KEY ({reader.GetString(1)}) REFERENCES {reader.GetString(2)}({reader.GetString(3)});\r\n";
                 }
                 reader.Close();
             }
@@ -55,6 +56,55 @@ namespace rokono_cl.DatabaseHandlers
                 Console.WriteLine(ex.Message);
             }
             return result;
+        }
+
+        internal string GetTableRows(string x)
+        {
+            var tableQuery = string.Empty;
+            var query = $"SELECT * FROM {x}";
+            SqlCommand command = new SqlCommand(query, SqlConnection);
+            
+            // Open the connection in a try/catch block. 
+            // Create and execute the DataReader, writing the result
+            // set to the console window.
+            try
+            {
+
+                SqlConnection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {   
+                    tableQuery += $"Insert into {x} values (";
+                    
+                    for(var i= 0; i < reader.FieldCount -1; i++)
+                    {
+                        var val =  reader.GetValue(i);
+                        if(i != reader.FieldCount - 1)
+                            tableQuery += $"{GetValueByType(val)},";
+                        else
+                            tableQuery += $"{GetValueByType(val)}";
+                    }
+                    tableQuery += ");\r\n";
+                }
+                reader.Close();
+                SqlConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return tableQuery;
+        }
+
+        private object GetValueByType(object val)
+        {
+            if(val is string)
+                val = $"'{val}'";
+            if(val is DateTime)
+                val = $"'{val}'";
+            if(val == null)
+                val = "null";
+            return val;
         }
 
         public List<OutboundTableConnection> GetTableForignKeys()

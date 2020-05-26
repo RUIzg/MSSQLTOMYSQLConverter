@@ -14,9 +14,10 @@ namespace MSSQLTOMYSQLConverter
         public static string Database { get; set; }
         public static string FilePath {get; set;}
         public static string Ip {get; set;}
+        public static bool DataBackup { get; set; }
         static void Main(string[] args)
         {
-           
+ 
             for(int i = 0; i < args.Length; i++)
             {
                 switch(args[i])
@@ -48,7 +49,9 @@ namespace MSSQLTOMYSQLConverter
                     case "-L":
                         InputHandler.GetConnections();
                         break;
-                     
+                    case "-b":
+                        DataBackup = true;
+                    break;
                     case "-Connection":
                         SavedConnection = InputHandler.GetConnectionById(args[i+1]);
                         System.Console.WriteLine(SavedConnection.ConnectionString);

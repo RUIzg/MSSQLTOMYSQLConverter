@@ -53,7 +53,7 @@ namespace rokono_cl.CLHandlers
         } 
 
 
-         internal static void ConvertDatabase() 
+        internal static void ConvertDatabase() 
         {
             if(Program.SavedConnection == null)
                 Program.SavedConnection = new SavedConnection{
