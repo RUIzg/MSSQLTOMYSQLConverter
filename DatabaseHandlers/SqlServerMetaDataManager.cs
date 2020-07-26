@@ -11,7 +11,7 @@ using SqlServerColumnInfoDto = MSSQLTOMYSQLConverter.Models.GetPrimaryKeyInfoOut
 namespace MSSQLTOMYSQLConverter.DatabaseHandlers
 {
     /// <summary>
-    /// 
+    /// 元数据获取 
     /// </summary>
     public class SqlServerMetaDataManager
     {

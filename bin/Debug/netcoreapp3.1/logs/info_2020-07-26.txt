@@ -1,0 +1,15 @@
+2020-07-26 15:34:25.2890 | Info | Clipboard middleware xclip for Linux is required otherwise the application throws an exception! 
+2020-07-26 15:34:25.3511 | Info | Creatiion script TrimRowVersionColResult.sql has been created in the root directory of the application in case the clipboard functionality fails!!! Known bug on Ubuntu based systems clipboard fails 
+2020-07-26 15:34:25.3871 | Info | Text has been saved to your clipboard, plase add it to your editor of choice. Don't froget to double check the generated data types if you like to change the defaults on your own!!! 
+2020-07-26 15:38:13.4820 | Info | Clipboard middleware xclip for Linux is required otherwise the application throws an exception! 
+2020-07-26 15:38:13.5303 | Info | Creatiion script TrimRowVersionColResult.sql has been created in the root directory of the application in case the clipboard functionality fails!!! Known bug on Ubuntu based systems clipboard fails 
+2020-07-26 15:38:15.6762 | Info | Text has been saved to your clipboard, plase add it to your editor of choice. Don't froget to double check the generated data types if you like to change the defaults on your own!!! 
+2020-07-26 15:39:16.5110 | Info | Clipboard middleware xclip for Linux is required otherwise the application throws an exception! 
+2020-07-26 15:39:16.5866 | Info | Creatiion script TrimRowVersionColResult.sql has been created in the root directory of the application in case the clipboard functionality fails!!! Known bug on Ubuntu based systems clipboard fails 
+2020-07-26 15:39:16.6519 | Info | Text has been saved to your clipboard, plase add it to your editor of choice. Don't froget to double check the generated data types if you like to change the defaults on your own!!! 
+2020-07-26 15:45:03.7854 | Info | Clipboard middleware xclip for Linux is required otherwise the application throws an exception! 
+2020-07-26 15:45:03.8550 | Info | Creatiion script TrimRowVersionColResult.sql has been created in the root directory of the application in case the clipboard functionality fails!!! Known bug on Ubuntu based systems clipboard fails 
+2020-07-26 15:45:03.8786 | Info | Text has been saved to your clipboard, plase add it to your editor of choice. Don't froget to double check the generated data types if you like to change the defaults on your own!!! 
+2020-07-26 16:00:00.1902 | Info | Clipboard middleware xclip for Linux is required otherwise the application throws an exception! 
+2020-07-26 16:00:00.2758 | Info | Creatiion script TrimRowVersionColResult.sql has been created in the root directory of the application in case the clipboard functionality fails!!! Known bug on Ubuntu based systems clipboard fails 
+2020-07-26 16:00:00.3021 | Info | Text has been saved to your clipboard, plase add it to your editor of choice. Don't froget to double check the generated data types if you like to change the defaults on your own!!! 

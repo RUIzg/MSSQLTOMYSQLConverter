@@ -60,5 +60,7 @@ E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConv
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.genruntimeconfig.cache
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\Dapper.dll
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\MoreLinq.dll
-E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.csproj.CoreCompileInputs.cache
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.csprojAssemblyReference.cache
+E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\NLog.config
+E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\NLog.dll
+E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.csproj.CoreCompileInputs.cache

@@ -6,6 +6,8 @@ using System.Text;
 using MSSQLTOMYSQLConverter;
 using MSSQLTOMYSQLConverter.Data_Hanlders;
 using MSSQLTOMYSQLConverter.DatabaseHandlers;
+using MSSQLTOMYSQLConverter.Models;
+using NLog;
 using rokono_cl.DatabaseHandlers;
 using RokonoDbManager.Models;
 
@@ -13,7 +15,9 @@ namespace rokono_cl.Data_Hanlders
 {
     public class DiagramHandlers
     {
-        public static void GenerateSchema(SavedConnection parameter, string dbName, string dbFilePath)
+        private static Logger   logger = NLog.LogManager.GetLogger(typeof(DiagramHandlers).ToString());
+
+        public static GenerateSchemaOutput GenerateSchema(SavedConnection parameter, string dbName, string dbFilePath)
         {
             var connStr = parameter.GetConnStr();
 
@@ -40,15 +44,22 @@ namespace rokono_cl.Data_Hanlders
 
                 var corelationData = context.GetDbUmlData();
                 dbCreationScript += corelationData;
-               //d System.Windows.Forms.Clipboard.SetText(dbCreationScript);
-               System.Console.WriteLine("Clipboard middleware xclip for Linux is required otherwise the application throws an exception!");
+                //d System.Windows.Forms.Clipboard.SetText(dbCreationScript);
+                logger.Info("Clipboard middleware xclip for Linux is required otherwise the application throws an exception!");
+         
 
-                if(Program.DataBackup)
+                if (Program.DataBackup)
                     dbCreationScript += "SET GLOBAL FOREIGN_KEY_CHECKS=1;";
 
 
-                WriteToFile(dbName , dbCreationScript); 
+                var sqlFilePath = WriteToFile(dbName , dbCreationScript); 
                 SetClipboard(dbCreationScript);
+
+                var ret = new GenerateSchemaOutput();
+                ret.SaveToFilePath = sqlFilePath;
+                ret.Sql = dbCreationScript;
+                return ret;
+
 
             }
         }
@@ -56,7 +67,7 @@ namespace rokono_cl.Data_Hanlders
         /// <summary>
         /// 
         /// </summary>
-        protected static void WriteToFile(string dbName ,  string dbCreationScript )
+        protected static string WriteToFile(string dbName ,  string dbCreationScript )
         {
 
             if (!File.Exists($"{dbName}.sql"))
@@ -66,9 +77,16 @@ namespace rokono_cl.Data_Hanlders
 
                 }
             }
-            File.WriteAllText($"{dbName}.sql", dbCreationScript);
+            var baseDir = Directory.GetCurrentDirectory();
+            var filePath = Path.Combine(baseDir, $"{dbName}.sql");
 
-            System.Console.WriteLine($"Creatiion script {dbName}.sql has been created in the root directory of the application in case the clipboard functionality fails!!! Known bug on Ubuntu based systems clipboard fails");
+            File.WriteAllText(filePath, dbCreationScript);
+
+            logger.Info($"Creatiion script {dbName}.sql has been created in the root directory of the application in case the clipboard functionality fails!!! Known bug on Ubuntu based systems clipboard fails");
+
+            logger.Debug($"sql file path:{filePath}");
+
+            return filePath;
 
         }
         /// <summary>
@@ -83,7 +101,7 @@ namespace rokono_cl.Data_Hanlders
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 LinuxCopy.SetText(dbCreationScript);
 
-            System.Console.WriteLine("Text has been saved to your clipboard, plase add it to your editor of choice. Don't froget to double check the generated data types if you like to change the defaults on your own!!!");
+            logger.Info("Text has been saved to your clipboard, plase add it to your editor of choice. Don't froget to double check the generated data types if you like to change the defaults on your own!!!");
             var tempFileName = Path.GetTempFileName();
             Console.WriteLine($"{nameof(tempFileName)}:{tempFileName}");
         }

@@ -1,0 +1,85 @@
+2020-07-26 14:15:49.5738 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:binary , dataLength:50
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 353
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 178 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 14:15:49.8068 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:datetimeoffset , dataLength:-1
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 353
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 178 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 14:15:49.8461 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:sql_variant , dataLength:0
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 353
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 178 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 14:15:49.9023 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:uniqueidentifier , dataLength:-1
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 353
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 178 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 14:15:49.9415 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:varbinary , dataLength:50
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 353
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 178 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 14:15:49.9873 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:xml , dataLength:-1
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 353
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 178 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:20.1079 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:binary , dataLength:50
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength)
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:20.1968 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:datetimeoffset , dataLength:-1
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength)
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:20.2414 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:sql_variant , dataLength:0
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength)
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:20.2767 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:uniqueidentifier , dataLength:-1
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength)
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:20.2993 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:varbinary , dataLength:50
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength)
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:20.3210 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:xml , dataLength:-1
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength)
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:31.8049 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:datetimeoffset , dataLength:-1
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 302
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 124 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:31.9511 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:sql_variant , dataLength:0
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 302
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 124 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:31.9727 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:uniqueidentifier , dataLength:-1
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 302
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 124 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:32.0351 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:varbinary , dataLength:50
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 302
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 124 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+
+2020-07-26 15:15:32.0523 | Error | sqlserver 数据类型转化mysql 失败 System.NotImplementedException: dataType:xml , dataLength:-1
+   at rokono_cl.DatabaseHandlers.DbManager.DetermineType(String dataType, Int32 dataLength) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 302
+   at rokono_cl.DatabaseHandlers.DbManager.<>c__DisplayClass7_0.<GetTableData>b__0(GetPrimaryKeyInfoOutput colItem) in E:\ProjectsGithub\MSSQLTOMYSQLConverter\DatabaseHandlers\DbManager.cs:line 124 
+ DbManager.GetTableData => List`1.ForEach => <>c__DisplayClass7_0.<GetTableData>b__0 
+

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "YvoSYfky0pZZPxEIhG80FIPlX4DHbjLJ9/5iHxH7jZr11PfXFc7Tdf4m4zdMD8YEhn5p4uZiCXcOG7SHra+sSw==",
+  "dgSpecHash": "agbg9Ae1EgEtyxA6RFCaiXGdiggNqZmpF5IA+6yC49x0fPXgbYghI/3Ms7DhLePRsLbCDI6TwA2Wiz/QLQe0Nw==",
   "success": true,
   "projectFilePath": "E:\\ProjectsGithub\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\xht\\.nuget\\packages\\microsoft.win32.registry\\4.5.0\\microsoft.win32.registry.4.5.0.nupkg.sha512",
     "C:\\Users\\xht\\.nuget\\packages\\morelinq\\3.3.2\\morelinq.3.3.2.nupkg.sha512",
     "C:\\Users\\xht\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
+    "C:\\Users\\xht\\.nuget\\packages\\nlog\\4.7.2\\nlog.4.7.2.nupkg.sha512",
     "C:\\Users\\xht\\.nuget\\packages\\runtime.native.system.data.sqlclient.sni\\4.5.0\\runtime.native.system.data.sqlclient.sni.4.5.0.nupkg.sha512",
     "C:\\Users\\xht\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\xht\\.nuget\\packages\\runtime.win-x64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",

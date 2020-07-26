@@ -3,6 +3,7 @@
 using System.Text;
 using Dapper;
 using MSSQLTOMYSQLConverter.DatabaseHandlers;
+using NLog;
 
 namespace rokono_cl.DatabaseHandlers
 {
@@ -14,7 +15,7 @@ namespace rokono_cl.DatabaseHandlers
     using MSSQLTOMYSQLConverter.Models;
     using RokonoDbManager.Models;
 
-    public class DbManager : IDisposable
+    public partial class DbManager : IDisposable
     {
         /// <summary>
         /// 
@@ -23,14 +24,18 @@ namespace rokono_cl.DatabaseHandlers
 
         private readonly SqlServerMetaDataManager _sqlServerMetaDataManager;
 
+        private static Logger _logger = null;
         public DbManager(string connectionString)
         {
             _sqlConnection = new SqlConnection(connectionString);
             _sqlServerMetaDataManager = new SqlServerMetaDataManager(connectionString);
+            _logger = NLog.LogManager.GetLogger(typeof(DbManager).ToString());
+
+
         }
 
 
-    
+
         /// <summary>
         /// 获取 外键引用
         /// </summary>
@@ -53,67 +58,13 @@ namespace rokono_cl.DatabaseHandlers
             return ret;
         }
 
+     
         /// <summary>
         /// 
         /// </summary>
         /// <param name="tableName"></param>
+        /// <param name="foreginKeys"></param>
         /// <returns></returns>
-        internal string GetTableRows(string tableName)
-        {
-            var tableQuery = string.Empty;
-            var query = $"SELECT * FROM {tableName}";
-            SqlCommand command = new SqlCommand(query, _sqlConnection);
-            
-            // Open the connection in a try/catch block. 
-            // Create and execute the DataReader, writing the result
-            // set to the console window.
-            try
-            {
-
-                _sqlConnection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    tableQuery += $"Insert into {tableName} values (";
-
-                    for (var i = 0; i < reader.FieldCount - 1; i++)
-                    {
-                        var val = reader.GetValue(i);
-                        if (i != reader.FieldCount - 1)
-                            tableQuery += $"{GetValueByType(val)},";
-                        else
-                            tableQuery += $"{GetValueByType(val)}";
-                    }
-
-                    tableQuery += ");\r\n";
-                }
-
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                _sqlConnection.Close();
-
-            }
-            return tableQuery;
-        }
-
-        private object GetValueByType(object val)
-        {
-            if(val is string)
-                val = $"'{val}'";
-            if(val is DateTime)
-                val = $"'{val}'";
-            if(val == null)
-                val = "null";
-            return val;
-        }
-
-
         public OutboundTable GetTableData(string tableName, List<OutboundTableConnection> foreginKeys)
         {
             var result = new OutboundTable();
@@ -130,7 +81,13 @@ namespace rokono_cl.DatabaseHandlers
             primaryAutoInc = primaryKeyInfos.FirstOrDefault()?.ColumnName;
            
             var notNull = "NOT NULL";
-            var tableData = $"CREATE TABLE IF NOT EXISTS {tableName} (";
+            var tableDataSb = new StringBuilder($"CREATE TABLE ");;
+            //tableDataSb.Append(" IF NOT EXISTS ");
+            tableDataSb.Append(" {tableName} ( ");
+
+
+            tableDataSb.AppendLine();
+
             var localData = new List<BindingRowModel>();
 
             var columnList = _sqlServerMetaDataManager.GetColumnInfos(tableName);
@@ -168,12 +125,21 @@ namespace rokono_cl.DatabaseHandlers
                 else
                 {
                     var leng = string.IsNullOrWhiteSpace(colItem.CharacterMaximumLength) ? -1 : Convert.ToInt32(colItem.CharacterMaximumLength);
-                    localData.Add(new BindingRowModel
+                    try
                     {
-                        ColumnName = colItem.ColumnName,
-                        DataType = $"{DetermineType(colItem.DataType,  leng)}",
-                        IsNull = notNull
-                });
+                        localData.Add(new BindingRowModel
+                        {
+                            ColumnName = colItem.ColumnName,
+                            DataType = $"{DetermineType(colItem.DataType, leng)}",
+                            IsNull = notNull
+                        });
+                    }
+                    catch (NotImplementedException e)
+                    {
+                        _logger.Error(e,$"sqlserver 数据类型转化mysql 失败");
+                    }
+             
+
                 }
                    
             });
@@ -189,32 +155,37 @@ namespace rokono_cl.DatabaseHandlers
                 if(i == lastRow)
                     next = "";
                 if(x.ColumnName == primaryAutoInc)
-                    tableData += $"{x.ColumnName} {x.DataType}{next}";
+                    tableDataSb .AppendLine($"{x.ColumnName} {x.DataType}{next}") ;
                 else
-                    tableData += $"{x.ColumnName} {x.DataType} {x.IsNull}{next}";
+                    tableDataSb.AppendLine($"{x.ColumnName} {x.DataType} {x.IsNull}{next}");
             });
-            tableData += " );";
-            result.CreationgString = tableData;
-
+            tableDataSb .AppendLine( " );");
+            result.CreationgString = tableDataSb.ToString();
             return result;
         }
 
-        private string DetermineType(string v, int v1)
+        /// <summary>
+        /// 数据类型转化
+        /// </summary>
+        /// <param name="dataType"></param>
+        /// <param name="dataLength"></param>
+        /// <returns></returns>
+        private string DetermineType(string dataType, int dataLength)
         {
             var res = string.Empty;
-            var lenght = v1 != -1 ? $"({v1.ToString()})" : "";
+            var lenght = dataLength != -1 ? $"({dataLength.ToString()})" : "";
 
-            switch(v)
+            switch(dataType)
             {
                 case "char":
-                    if(v1 > 255)
-                        res =  DetermineType("varchar",v1);
+                    if(dataLength > 255)
+                        res =  DetermineType("varchar",dataLength);
                     else
                         res = $"CHAR{lenght}"; 
                 break;
                 case "varchar":
-                    if(v1 > 65535)
-                        res =  DetermineType("text", v1);
+                    if(dataLength > 65535)
+                        res =  DetermineType("text", dataLength);
                     else
                         res = $"VARCHAR{lenght}";
                 break;
@@ -225,8 +196,13 @@ namespace rokono_cl.DatabaseHandlers
                     res = $"VARCHAR{lenght}";
                 break;
                 case "nvarchar":
-                    if(v1 > 65535 && v1 != -1)
-                        DetermineType("text", v1);
+                    if(dataLength==-1)//nvarchar(max) convert to 	LONGTEXT
+                    {
+                        res = $" LONGTEXT ";
+
+                    }
+                    else if(dataLength > 65535 && dataLength != -1)
+                        res =DetermineType("text", dataLength);
                     else
                         res = $"VARCHAR{lenght}";
                 break;  
@@ -234,39 +210,49 @@ namespace rokono_cl.DatabaseHandlers
                     res = $"LONGTEXT{lenght}";
                 break;
                 case "binary":
-                    if(v1 > 65.535 && v1 != -1)
-                        res = $"MEDIUMBLOB{lenght}";
-                    else if(v1 >   16777215 && v1 != -1)
-                        res = $"LONGBLOB{lenght}"; 
-                    
+                        res = $"LONGBLOB"; //参考  navicat 转化
+                    //if(dataLength > 65.535 && dataLength != -1)
+                    //    res = $"MEDIUMBLOB{lenght}";
+                    //else if(dataLength >   16777215 && dataLength != -1)
+                    //    res = $"LONGBLOB{lenght}";
+                    //else if(dataLength>0)
+                    //{
+                    //    res = $"binary{lenght}";
+                    //}
+             
 
-                break;
+                    break;
                 case "varbinary":
-                       if(v1 > 65.535 && v1 != -1)
+                       if(dataLength > 65.535 && dataLength != -1)
                         res = $"MEDIUMBLOB{lenght}";
-                    else if(v1 >   16777215 && v1 != -1)
+                    else if(dataLength >   16777215 && dataLength != -1)
                         res = $"LONGBLOB{lenght}"; 
+                       else 
+                       {
+                        res = $"LONGBLOB"; 
+                       }
                 break;
                 case "varbinary(max)":
-                       if(v1 > 65.535 && v1 != -1)
+                       if(dataLength > 65.535 && dataLength != -1)
                         res = $"MEDIUMBLOB{lenght}";
-                    else if(v1 >   16777215 && v1 != -1)
-                        res = $"LONGBLOB{lenght}"; 
+                    else if(dataLength >   16777215 && dataLength != -1)
+                        res = $"LONGBLOB{lenght}";
                 break;
                 case "image":
-                       if(v1 > 65.535 && v1 != -1)
+                       if(dataLength > 65.535 && dataLength != -1)
                         res = $"MEDIUMBLOB{lenght}";
-                    else if(v1 > 16777215 && v1 != -1)
+                    else if(dataLength > 16777215 && dataLength != -1)
                         res = $"LONGBLOB{lenght}"; 
                 break;
                 case "bit":
-                    res = $"CHAR"; 
+                    res = $"tinyint";   //navicat 
+                    //res = $"CHAR"; 
                 break;
                 case "tinyint":
                     res = $"TINYINT{lenght}";
                 break;
                 case "smallint":
-                    res = $"INT{lenght}";
+                    res = $"smallint";
                 break;
                 case "int":
                     res = $"INT{lenght}";
@@ -282,20 +268,21 @@ namespace rokono_cl.DatabaseHandlers
 
                 break;
                 case "smallmoney":
-                    res = $"INT{lenght}";
+                    res = $" decimal(10,4) ";
 
                 break;
                 case "money":
-                    res =  $"DECIMAL{lenght}";
+                    res =  $"	DECIMAL(15,4)";
 
                 break;
                 case "float":
                     res = $"FLOAT{lenght}";
                 break;
                 case "real":
-                    res =  $"DECIMAL{lenght}";
+                    res =  $"real"; // http://www.sqlines.com/sql-server-to-mysql
+                    //navicat 是转化 为 float
 
-                break;
+                    break;
                 case "datetime":
                     res = $"DATETIME";
                 break;
@@ -314,35 +301,40 @@ namespace rokono_cl.DatabaseHandlers
                     res = "TIME";
                 break;
                 case "datetimeoffset":
-
+                    res = "datetime";
                 break;
-                case "timestamp":
+                case "timestamp": 
                     res = "TIMESTAMP";
-                break;
-             
+                    //navicat--> longblob
+
+                    break;
+
+                case "xml":
+                    res = "longtext";
+                    break;
+
+
+
+                case "uniqueidentifier":
+                    res = "char(36)";
+                    break;
+
+                case "sql_variant":
+                    res = "longblob";
+                    break;
+
+
+
+            }
+
+            if (string.IsNullOrWhiteSpace(res))
+            {
+                throw new NotImplementedException($"{nameof(dataType)}:{dataType} , {nameof(dataLength)}:{dataLength}"); 
             }
             return res;
         }
 
-        public SqlDataReader ExecuteQuery(string query)
-        {
-            
-            SqlCommand command = new SqlCommand(query, _sqlConnection);
-            try
-            {
-                if (_sqlConnection.State != ConnectionState.Open) //try open 
-                {
-                    _sqlConnection.Open(); 
-                }
-                return command.ExecuteReader();
-              
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw ex;
-            }
-        }
+     
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
