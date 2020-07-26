@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\ProjectsGithub\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj": {}
+    "D:\\Users\\xht\\source\\repos\\EhiDataSyncTools\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj": {}
   },
   "projects": {
-    "E:\\ProjectsGithub\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj": {
+    "D:\\Users\\xht\\source\\repos\\EhiDataSyncTools\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProjectsGithub\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj",
+        "projectUniqueName": "D:\\Users\\xht\\source\\repos\\EhiDataSyncTools\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj",
         "projectName": "MSSQLTOMYSQLConverter",
-        "projectPath": "E:\\ProjectsGithub\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj",
+        "projectPath": "D:\\Users\\xht\\source\\repos\\EhiDataSyncTools\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj",
         "packagesPath": "C:\\Users\\xht\\.nuget\\packages\\",
-        "outputPath": "E:\\ProjectsGithub\\MSSQLTOMYSQLConverter\\obj\\",
+        "outputPath": "D:\\Users\\xht\\source\\repos\\EhiDataSyncTools\\MSSQLTOMYSQLConverter\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\xht\\AppData\\Roaming\\NuGet\\NuGet.Config",

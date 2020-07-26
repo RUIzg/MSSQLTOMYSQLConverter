@@ -42,33 +42,33 @@ namespace rokono_cl.DatabaseHandlers
         /// <returns></returns>
         public string GetDbUmlData()
         {
-            StringBuilder sb  = new StringBuilder(); //使用 stringbuilder 拼接更好
-        
+            StringBuilder sb = new StringBuilder(); //使用 stringbuilder 拼接更好
+
             // Open the connection in a try/catch block. 
             // Create and execute the DataReader, writing the result
             // set to the console window.
-                var metaList = _sqlServerMetaDataManager.GetRefColumnInfo();
-                metaList.ForEach(item =>
-                {
-                    sb.AppendLine(
-                        $"ALTER TABLE {item.ParentTable} ADD FOREIGN KEY ({item.ColumnId}) REFERENCES {item.RefrencedTable}({item.CorelationName});");
-                });
+            var metaList = _sqlServerMetaDataManager.GetRefColumnInfo();
+            metaList.ForEach(item =>
+            {
+                sb.AppendLine(
+                    $"ALTER TABLE {item.ParentTable} ADD FOREIGN KEY ({item.ColumnId}) REFERENCES {item.RefrencedTable}({item.CorelationName});");
+            });
 
-                var ret = sb.ToString();
+            var ret = sb.ToString();
             return ret;
         }
 
-     
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="foreginKeys"></param>
         /// <returns></returns>
-        public OutboundTable GetTableData(string tableName, List<OutboundTableConnection> foreginKeys)
+        public OutboundTableDto GetTableData(string tableName, List<OutboundTableConnection> foreginKeys)
         {
-            var result = new OutboundTable();
-         
+            var result = new OutboundTableDto(tableName);
+
             var primaryAutoInc = string.Empty;
 
             var primaryKeyInfos = _sqlServerMetaDataManager.GetPrimaryKeyInfo(tableName);
@@ -79,11 +79,11 @@ namespace rokono_cl.DatabaseHandlers
             }
 
             primaryAutoInc = primaryKeyInfos.FirstOrDefault()?.ColumnName;
-           
+
             var notNull = "NOT NULL";
-            var tableDataSb = new StringBuilder($"CREATE TABLE ");;
+            var tableDataSb = new StringBuilder($"CREATE TABLE "); ;
             //tableDataSb.Append(" IF NOT EXISTS ");
-            tableDataSb.Append(" {tableName} ( ");
+            tableDataSb.Append($" {tableName} ( ");
 
 
             tableDataSb.AppendLine();
@@ -91,23 +91,17 @@ namespace rokono_cl.DatabaseHandlers
             var localData = new List<BindingRowModel>();
 
             var columnList = _sqlServerMetaDataManager.GetColumnInfos(tableName);
-       
+
 
             columnList.ForEach(colItem =>
             {
-                if (colItem.IsNullable == "NO")
-                    notNull = "NOT NULL";
-                else
-                    notNull = "";
-
-
                 if (colItem.ColumnName == primaryAutoInc) //主键 ，自增处理
                 {
                     localData.Add(new BindingRowModel
                     {
                         ColumnName = colItem.ColumnName,
                         DataType = $"INT AUTO_INCREMENT PRIMARY KEY",
-                        IsNull = notNull
+                        IsNullable = colItem.IsNullable,
                     });
                 }
                 //外健处理
@@ -118,10 +112,10 @@ namespace rokono_cl.DatabaseHandlers
                     {
                         ColumnName = colItem.ColumnName,
                         DataType = $"INT AUTO_INCREMENT PRIMARY KEY",
-                        IsNull = notNull
+                        IsNullable = colItem.IsNullable,
                     });
                 }
-                    
+
                 else
                 {
                     var leng = string.IsNullOrWhiteSpace(colItem.CharacterMaximumLength) ? -1 : Convert.ToInt32(colItem.CharacterMaximumLength);
@@ -130,18 +124,18 @@ namespace rokono_cl.DatabaseHandlers
                         localData.Add(new BindingRowModel
                         {
                             ColumnName = colItem.ColumnName,
-                            DataType = $"{DetermineType(colItem.DataType, leng)}",
-                            IsNull = notNull
+                            DataType = $"{DetermineType(colItem.DataType, leng, colItem.NumericPrecision, colItem.NumericScale)}",
+                            IsNullable = colItem.IsNullable,
                         });
                     }
                     catch (NotImplementedException e)
                     {
-                        _logger.Error(e,$"sqlserver 数据类型转化mysql 失败");
+                        _logger.Error(e, $"sqlserver 数据类型转化mysql 失败");
                     }
-             
+
 
                 }
-                   
+
             });
 
 
@@ -149,18 +143,21 @@ namespace rokono_cl.DatabaseHandlers
 
             var i = 0;
             var lastRow = localData.Count;
-            localData.ForEach(x=>{
+            localData.ForEach(x =>
+            {
                 i++;
                 var next = ",";
-                if(i == lastRow)
+                if (i == lastRow)
                     next = "";
-                if(x.ColumnName == primaryAutoInc)
-                    tableDataSb .AppendLine($"{x.ColumnName} {x.DataType}{next}") ;
+                if (x.ColumnName == primaryAutoInc)
+                    tableDataSb.AppendLine($"{x.ColumnName} {x.DataType}{next}");
                 else
                     tableDataSb.AppendLine($"{x.ColumnName} {x.DataType} {x.IsNull}{next}");
             });
-            tableDataSb .AppendLine( " );");
-            result.CreationgString = tableDataSb.ToString();
+            tableDataSb.AppendLine(" );");
+            result.TableDdlSql = tableDataSb.ToString();
+            result.RowInfo = localData;
+
             return result;
         }
 
@@ -170,140 +167,140 @@ namespace rokono_cl.DatabaseHandlers
         /// <param name="dataType"></param>
         /// <param name="dataLength"></param>
         /// <returns></returns>
-        private string DetermineType(string dataType, int dataLength)
+        private string DetermineType(string dataType, int dataLength, int? numericPrecision, int? numericScale)
         {
             var res = string.Empty;
             var lenght = dataLength != -1 ? $"({dataLength.ToString()})" : "";
 
-            switch(dataType)
+            switch (dataType)
             {
                 case "char":
-                    if(dataLength > 255)
-                        res =  DetermineType("varchar",dataLength);
+                    if (dataLength > 255)
+                        res = DetermineType("varchar", dataLength, numericPrecision, numericScale);
                     else
-                        res = $"CHAR{lenght}"; 
-                break;
+                        res = $"CHAR{lenght}";
+                    break;
                 case "varchar":
-                    if(dataLength > 65535)
-                        res =  DetermineType("text", dataLength);
+                    if (dataLength > 65535)
+                        res = DetermineType("text", dataLength, numericPrecision, numericScale);
                     else
                         res = $"VARCHAR{lenght}";
-                break;
+                    break;
                 case "text":
                     res = $"TEXT{lenght}";
-                break;
+                    break;
                 case "nchar":
                     res = $"VARCHAR{lenght}";
-                break;
+                    break;
                 case "nvarchar":
-                    if(dataLength==-1)//nvarchar(max) convert to 	LONGTEXT
+                    if (dataLength == -1)//nvarchar(max) convert to 	LONGTEXT
                     {
                         res = $" LONGTEXT ";
 
                     }
-                    else if(dataLength > 65535 && dataLength != -1)
-                        res =DetermineType("text", dataLength);
+                    else if (dataLength > 65535 && dataLength != -1)
+                        res = DetermineType("text", dataLength, numericPrecision, numericScale);
                     else
                         res = $"VARCHAR{lenght}";
-                break;  
+                    break;
                 case "ntext":
                     res = $"LONGTEXT{lenght}";
-                break;
+                    break;
                 case "binary":
-                        res = $"LONGBLOB"; //参考  navicat 转化
-                    //if(dataLength > 65.535 && dataLength != -1)
-                    //    res = $"MEDIUMBLOB{lenght}";
-                    //else if(dataLength >   16777215 && dataLength != -1)
-                    //    res = $"LONGBLOB{lenght}";
-                    //else if(dataLength>0)
-                    //{
-                    //    res = $"binary{lenght}";
-                    //}
-             
+                    res = $"LONGBLOB"; //参考  navicat 转化
+                                       //if(dataLength > 65.535 && dataLength != -1)
+                                       //    res = $"MEDIUMBLOB{lenght}";
+                                       //else if(dataLength >   16777215 && dataLength != -1)
+                                       //    res = $"LONGBLOB{lenght}";
+                                       //else if(dataLength>0)
+                                       //{
+                                       //    res = $"binary{lenght}";
+                                       //}
+
 
                     break;
                 case "varbinary":
-                       if(dataLength > 65.535 && dataLength != -1)
+                    if (dataLength > 65.535 && dataLength != -1)
                         res = $"MEDIUMBLOB{lenght}";
-                    else if(dataLength >   16777215 && dataLength != -1)
-                        res = $"LONGBLOB{lenght}"; 
-                       else 
-                       {
-                        res = $"LONGBLOB"; 
-                       }
-                break;
-                case "varbinary(max)":
-                       if(dataLength > 65.535 && dataLength != -1)
-                        res = $"MEDIUMBLOB{lenght}";
-                    else if(dataLength >   16777215 && dataLength != -1)
+                    else if (dataLength > 16777215 && dataLength != -1)
                         res = $"LONGBLOB{lenght}";
-                break;
-                case "image":
-                       if(dataLength > 65.535 && dataLength != -1)
+                    else
+                    {
+                        res = $"LONGBLOB";
+                    }
+                    break;
+                case "varbinary(max)":
+                    if (dataLength > 65.535 && dataLength != -1)
                         res = $"MEDIUMBLOB{lenght}";
-                    else if(dataLength > 16777215 && dataLength != -1)
-                        res = $"LONGBLOB{lenght}"; 
-                break;
+                    else if (dataLength > 16777215 && dataLength != -1)
+                        res = $"LONGBLOB{lenght}";
+                    break;
+                case "image":
+                    if (dataLength > 65.535 && dataLength != -1)
+                        res = $"MEDIUMBLOB{lenght}";
+                    else if (dataLength > 16777215 && dataLength != -1)
+                        res = $"LONGBLOB{lenght}";
+                    break;
                 case "bit":
                     res = $"tinyint";   //navicat 
-                    //res = $"CHAR"; 
-                break;
+                                        //res = $"CHAR"; 
+                    break;
                 case "tinyint":
                     res = $"TINYINT{lenght}";
-                break;
+                    break;
                 case "smallint":
                     res = $"smallint";
-                break;
+                    break;
                 case "int":
                     res = $"INT{lenght}";
-                break;
+                    break;
                 case "bigint":
                     res = $"BIGINT{lenght}";
-                break;
+                    break;
                 case "decimal":
-                    res =  $"DECIMAL{lenght}";
-                break;
+                    res = $"DECIMAL({numericPrecision},{numericScale})";
+                    break;
                 case "numeric":
                     res = $"BIGINT{lenght}";
 
-                break;
+                    break;
                 case "smallmoney":
                     res = $" decimal(10,4) ";
 
-                break;
+                    break;
                 case "money":
-                    res =  $"	DECIMAL(15,4)";
+                    res = $"	DECIMAL(15,4)";
 
-                break;
+                    break;
                 case "float":
                     res = $"FLOAT{lenght}";
-                break;
+                    break;
                 case "real":
-                    res =  $"real"; // http://www.sqlines.com/sql-server-to-mysql
+                    res = $"real"; // http://www.sqlines.com/sql-server-to-mysql
                     //navicat 是转化 为 float
 
                     break;
                 case "datetime":
                     res = $"DATETIME";
-                break;
+                    break;
                 case "datetime2":
                     res = $"DATETIME";
-                break;
+                    break;
                 case "smalldatetime":
                     res = $"DATETIME";
 
-                break;
+                    break;
                 case "date":
                     res = $"DATE";
-                break;
+                    break;
 
                 case "time":
                     res = "TIME";
-                break;
+                    break;
                 case "datetimeoffset":
                     res = "datetime";
-                break;
-                case "timestamp": 
+                    break;
+                case "timestamp":
                     res = "TIMESTAMP";
                     //navicat--> longblob
 
@@ -329,12 +326,12 @@ namespace rokono_cl.DatabaseHandlers
 
             if (string.IsNullOrWhiteSpace(res))
             {
-                throw new NotImplementedException($"{nameof(dataType)}:{dataType} , {nameof(dataLength)}:{dataLength}"); 
+                throw new NotImplementedException($"{nameof(dataType)}:{dataType} , {nameof(dataLength)}:{dataLength}");
             }
             return res;
         }
 
-     
+
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 

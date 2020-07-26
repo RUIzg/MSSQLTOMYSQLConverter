@@ -97,6 +97,7 @@ COLUMN_NAME, 'IsIdentity') = 1 ";
 
             var sql =
                 @$"SELECT COLUMN_NAME as ColumnName, DATA_TYPE DataType , CHARACTER_MAXIMUM_LENGTH CharacterMaximumLength , IS_NULLABLE IsNullable
+,NUMERIC_PRECISION as NumericPrecision,NUMERIC_SCALE as NumericScale
 FROM INFORMATION_SCHEMA.COLUMNS 
 WHERE TABLE_NAME = N'{tableName}'  ";
 

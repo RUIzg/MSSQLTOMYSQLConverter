@@ -8,5 +8,16 @@
         public string IsNullable { get; set; }
 
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? NumericPrecision { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? NumericScale { get; set; }
     }
 }

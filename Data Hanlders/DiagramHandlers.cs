@@ -17,9 +17,10 @@ namespace rokono_cl.Data_Hanlders
     {
         private static Logger   logger = NLog.LogManager.GetLogger(typeof(DiagramHandlers).ToString());
 
-        public static GenerateSchemaOutput GenerateSchema(SavedConnection parameter, string dbName, string dbFilePath)
+        public static GenerateSchemaOutput GenerateSchema(SavedConnection input)
         {
-            var connStr = parameter.GetConnStr();
+            var connStr = input.GetConnStr();
+                var ret = new GenerateSchemaOutput();
 
             using (var context = new DbManager(connStr))
             {
@@ -38,8 +39,12 @@ namespace rokono_cl.Data_Hanlders
                         dbCreationScript += context.GetTableRows(x); //todo zgr ,之后 再看是否需要改造
 
                     var od = context.GetTableData(x,tablesForeignKeys);
-                    System.Console.WriteLine(od.CreationgString);
-                    dbCreationScript += $"{od.CreationgString}\r\n";
+
+                    System.Console.WriteLine(od.TableDdlSql);
+                    
+                    ret.TableInfo.Add(od);
+
+                    dbCreationScript += $"{od.TableDdlSql}\r\n";
                 }
 
                 var corelationData = context.GetDbUmlData();
@@ -52,12 +57,13 @@ namespace rokono_cl.Data_Hanlders
                     dbCreationScript += "SET GLOBAL FOREIGN_KEY_CHECKS=1;";
 
 
-                var sqlFilePath = WriteToFile(dbName , dbCreationScript); 
+                var sqlFilePath = WriteToFile(input.Database, dbCreationScript); 
                 SetClipboard(dbCreationScript);
 
-                var ret = new GenerateSchemaOutput();
                 ret.SaveToFilePath = sqlFilePath;
                 ret.Sql = dbCreationScript;
+                ret.DbName = input.Database;
+
                 return ret;
 
 

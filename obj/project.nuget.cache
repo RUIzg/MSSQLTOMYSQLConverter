@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "agbg9Ae1EgEtyxA6RFCaiXGdiggNqZmpF5IA+6yC49x0fPXgbYghI/3Ms7DhLePRsLbCDI6TwA2Wiz/QLQe0Nw==",
+  "dgSpecHash": "HQ3iEZWA8YjnlxzxsPSXlBAq+Dqi/ZiOBu4ByvMLQtB/jT3Cdzv7FcqELc8cFzBxhYvGgooch0YCR1ryfD2zXQ==",
   "success": true,
-  "projectFilePath": "E:\\ProjectsGithub\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj",
+  "projectFilePath": "D:\\Users\\xht\\source\\repos\\EhiDataSyncTools\\MSSQLTOMYSQLConverter\\MSSQLTOMYSQLConverter.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\xht\\.nuget\\packages\\dapper\\2.0.35\\dapper.2.0.35.nupkg.sha512",
     "C:\\Users\\xht\\.nuget\\packages\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",

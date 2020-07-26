@@ -62,7 +62,7 @@ namespace rokono_cl.CLHandlers
                     Password = Program.Password,
                     Username = Program.User,
                 };
-            DiagramHandlers.GenerateSchema(Program.SavedConnection,Program.SavedConnection.Database,Program.SavedConnection.FilePath);
+            DiagramHandlers.GenerateSchema(Program.SavedConnection);
         }  
      
 
