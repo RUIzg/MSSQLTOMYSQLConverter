@@ -1,8 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "/home/dwarfdevelopment/.dotnet/store/|arch|/|tfm|",
-      "/home/dwarfdevelopment/.nuget/packages"
+      "C:\\Users\\xht\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\xht\\.nuget\\packages"
     ]
   }
 }

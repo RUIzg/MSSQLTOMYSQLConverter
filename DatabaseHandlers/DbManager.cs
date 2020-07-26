@@ -338,14 +338,17 @@ namespace rokono_cl.DatabaseHandlers
             SqlCommand command = new SqlCommand(query, SqlConnection);
             try
             {
-                SqlConnection.Open();
+                if (SqlConnection.State != ConnectionState.Open) //try open 
+                {
+                    SqlConnection.Open(); 
+                }
                 return command.ExecuteReader();
               
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                throw ex;
             }
         }
         #region IDisposable Support
