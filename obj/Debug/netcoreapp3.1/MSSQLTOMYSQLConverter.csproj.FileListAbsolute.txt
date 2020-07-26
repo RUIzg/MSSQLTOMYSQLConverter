@@ -52,11 +52,13 @@ E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\runtimes\win-x64
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\sni.dll
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
-E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.csprojAssemblyReference.cache
-E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.csproj.CoreCompileInputs.cache
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.AssemblyInfoInputs.cache
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.AssemblyInfo.cs
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.csproj.CopyComplete
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.dll
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.pdb
 E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.genruntimeconfig.cache
+E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\Dapper.dll
+E:\ProjectsGithub\MSSQLTOMYSQLConverter\bin\Debug\netcoreapp3.1\MoreLinq.dll
+E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.csproj.CoreCompileInputs.cache
+E:\ProjectsGithub\MSSQLTOMYSQLConverter\obj\Debug\netcoreapp3.1\MSSQLTOMYSQLConverter.csprojAssemblyReference.cache

@@ -1,5 +1,9 @@
 
 
+using System.Text;
+using Dapper;
+using MSSQLTOMYSQLConverter.DatabaseHandlers;
+
 namespace rokono_cl.DatabaseHandlers
 {
     using System;
@@ -12,86 +16,88 @@ namespace rokono_cl.DatabaseHandlers
 
     public class DbManager : IDisposable
     {
-        SqlConnection SqlConnection; 
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly SqlConnection _sqlConnection;
+
+        private readonly SqlServerMetaDataManager _sqlServerMetaDataManager;
+
         public DbManager(string connectionString)
         {
-            SqlConnection = new SqlConnection(connectionString);
+            _sqlConnection = new SqlConnection(connectionString);
+            _sqlServerMetaDataManager = new SqlServerMetaDataManager(connectionString);
         }
 
-        internal List<string> GetTables()
-        {
-            var result = new List<string>();
-            var query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'";
-            var reader = ExecuteQuery(query);
-            while (reader.Read())    
-                result.Add(reader.GetString(0));
-            reader.Close();
-            SqlConnection.Close();
-            return result;
-        }
 
+    
+        /// <summary>
+        /// 获取 外键引用
+        /// </summary>
+        /// <returns></returns>
         public string GetDbUmlData()
         {
-            var result = string.Empty;
-            var query = "SELECT tp.name 'Parent table', cp.name 'Column Id',tr.name 'Refrenced table',cr.name 'Corelation Name' FROM  sys.foreign_keys fk INNER JOIN  sys.tables tp ON fk.parent_object_id = tp.object_id INNER JOIN  sys.tables tr ON fk.referenced_object_id = tr.object_id INNER JOIN  sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id ORDER BY tp.name, cp.column_id";
-            SqlCommand command = new SqlCommand(query, SqlConnection);
+            StringBuilder sb  = new StringBuilder(); //使用 stringbuilder 拼接更好
+        
+            // Open the connection in a try/catch block. 
+            // Create and execute the DataReader, writing the result
+            // set to the console window.
+                var metaList = _sqlServerMetaDataManager.GetRefColumnInfo();
+                metaList.ForEach(item =>
+                {
+                    sb.AppendLine(
+                        $"ALTER TABLE {item.ParentTable} ADD FOREIGN KEY ({item.ColumnId}) REFERENCES {item.RefrencedTable}({item.CorelationName});");
+                });
+
+                var ret = sb.ToString();
+            return ret;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        internal string GetTableRows(string tableName)
+        {
+            var tableQuery = string.Empty;
+            var query = $"SELECT * FROM {tableName}";
+            SqlCommand command = new SqlCommand(query, _sqlConnection);
             
             // Open the connection in a try/catch block. 
             // Create and execute the DataReader, writing the result
             // set to the console window.
             try
             {
-                SqlConnection.Open();
+
+                _sqlConnection.Open();
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                 
-                        
-                     result += $"ALTER TABLE {reader.GetString(0)} ADD FOREIGN KEY ({reader.GetString(1)}) REFERENCES {reader.GetString(2)}({reader.GetString(3)});\r\n";
-                }
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return result;
-        }
+                    tableQuery += $"Insert into {tableName} values (";
 
-        internal string GetTableRows(string x)
-        {
-            var tableQuery = string.Empty;
-            var query = $"SELECT * FROM {x}";
-            SqlCommand command = new SqlCommand(query, SqlConnection);
-            
-            // Open the connection in a try/catch block. 
-            // Create and execute the DataReader, writing the result
-            // set to the console window.
-            try
-            {
-
-                SqlConnection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {   
-                    tableQuery += $"Insert into {x} values (";
-                    
-                    for(var i= 0; i < reader.FieldCount -1; i++)
+                    for (var i = 0; i < reader.FieldCount - 1; i++)
                     {
-                        var val =  reader.GetValue(i);
-                        if(i != reader.FieldCount - 1)
+                        var val = reader.GetValue(i);
+                        if (i != reader.FieldCount - 1)
                             tableQuery += $"{GetValueByType(val)},";
                         else
                             tableQuery += $"{GetValueByType(val)}";
                     }
+
                     tableQuery += ");\r\n";
                 }
+
                 reader.Close();
-                SqlConnection.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                _sqlConnection.Close();
+
             }
             return tableQuery;
         }
@@ -107,102 +113,88 @@ namespace rokono_cl.DatabaseHandlers
             return val;
         }
 
-        public List<OutboundTableConnection> GetTableForignKeys()
-        {
-            var result = new List<OutboundTableConnection> ();
-            var query = "SELECT tp.name 'Parent table', cp.name 'Column Id',tr.name 'Refrenced table',cr.name 'Corelation Name' FROM  sys.foreign_keys fk INNER JOIN  sys.tables tp ON fk.parent_object_id = tp.object_id INNER JOIN  sys.tables tr ON fk.referenced_object_id = tr.object_id INNER JOIN  sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id INNER JOIN sys.columns cp ON fkc.parent_column_id = cp.column_id AND fkc.parent_object_id = cp.object_id INNER JOIN sys.columns cr ON fkc.referenced_column_id = cr.column_id AND fkc.referenced_object_id = cr.object_id ORDER BY tp.name, cp.column_id";
-            SqlCommand command = new SqlCommand(query, SqlConnection);
 
-            // Open the connection in a try/catch block. 
-            // Create and execute the DataReader, writing the result
-            // set to the console window.
-            try
-            {
-                SqlConnection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    result.Add(new OutboundTableConnection{
-                            TableName = reader.GetString(2),
-                            ConnectionName = reader.GetString(3)
-
-                    });
-                        
-                    //  result += $"ALTER TABLE {reader.GetString(0)} ADD FOREIGN KEY ({reader.GetString(1)}) REFERENCES {reader.GetString(2)}({reader.GetString(3)});";
-                }
-                reader.Close();
-                SqlConnection.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return result;
-        }
-        
-        
         public OutboundTable GetTableData(string tableName, List<OutboundTableConnection> foreginKeys)
         {
             var result = new OutboundTable();
          
             var primaryAutoInc = string.Empty;
-            var getPrimaryKey = ExecuteQuery($"SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{tableName}'and COLUMNPROPERTY(object_id(TABLE_NAME), COLUMN_NAME, 'IsIdentity') = 1");
-            while (getPrimaryKey.Read())    
+
+            var primaryKeyInfos = _sqlServerMetaDataManager.GetPrimaryKeyInfo(tableName);
+            if (primaryKeyInfos.Count() > 1)
             {
-                primaryAutoInc = getPrimaryKey.GetString(0);
+                //error 
+                throw new NotImplementedException("还未实现 多主键mapper 功能 ");
             }
-            getPrimaryKey.Close();
-            SqlConnection.Close();
-            var query =$"SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'{tableName}'";
-            var reader = ExecuteQuery(query);
+
+            primaryAutoInc = primaryKeyInfos.FirstOrDefault()?.ColumnName;
            
             var notNull = "NOT NULL";
             var tableData = $"CREATE TABLE IF NOT EXISTS {tableName} (";
             var localData = new List<BindingRowModel>();
-            var i = 0;
-            while (reader.Read())    
+
+            var columnList = _sqlServerMetaDataManager.GetColumnInfos(tableName);
+       
+
+            columnList.ForEach(colItem =>
             {
-                
-                if(reader.GetString(3) == "NO")
+                if (colItem.IsNullable == "NO")
                     notNull = "NOT NULL";
                 else
                     notNull = "";
-                
 
-                if(reader.GetString(0) == primaryAutoInc)
-                    localData.Add(new BindingRowModel{
-                        TableName = reader.GetString(0),
+
+                if (colItem.ColumnName == primaryAutoInc) //主键 ，自增处理
+                {
+                    localData.Add(new BindingRowModel
+                    {
+                        ColumnName = colItem.ColumnName,
                         DataType = $"INT AUTO_INCREMENT PRIMARY KEY",
                         IsNull = notNull
                     });
-                else if( foreginKeys.Any(x=>x.TableName == tableName && x.ConnectionName == reader.GetString(0)))
-                    localData.Add(new BindingRowModel{
-                        TableName = reader.GetString(0),
+                }
+                //外健处理
+                else if (foreginKeys.Any(x => x.TableName == tableName && x.ConnectionName == colItem.ColumnName))
+                {
+
+                    localData.Add(new BindingRowModel
+                    {
+                        ColumnName = colItem.ColumnName,
                         DataType = $"INT AUTO_INCREMENT PRIMARY KEY",
                         IsNull = notNull
                     });
-                else if(reader.IsDBNull(2))
-                    localData.Add(new BindingRowModel{
-                        TableName = reader.GetString(0),
-                        DataType = $"{DetermineType(reader.GetString(1), reader.IsDBNull(2) ? -1 : reader.GetInt32(2))}",
+                }
+                    
+                else
+                {
+                    var leng = string.IsNullOrWhiteSpace(colItem.CharacterMaximumLength) ? -1 : Convert.ToInt32(colItem.CharacterMaximumLength);
+                    localData.Add(new BindingRowModel
+                    {
+                        ColumnName = colItem.ColumnName,
+                        DataType = $"{DetermineType(colItem.DataType,  leng)}",
                         IsNull = notNull
-                    });
-             }
+                });
+                }
+                   
+            });
+
+
+
+
+            var i = 0;
             var lastRow = localData.Count;
             localData.ForEach(x=>{
                 i++;
                 var next = ",";
                 if(i == lastRow)
                     next = "";
-                if(x.TableName == primaryAutoInc)
-                    tableData += $"{x.TableName} {x.DataType}{next}";
+                if(x.ColumnName == primaryAutoInc)
+                    tableData += $"{x.ColumnName} {x.DataType}{next}";
                 else
-                    tableData += $"{x.TableName} {x.DataType} {x.IsNull}{next}";
+                    tableData += $"{x.ColumnName} {x.DataType} {x.IsNull}{next}";
             });
             tableData += " );";
             result.CreationgString = tableData;
-            reader.Close();
-            SqlConnection.Close();
 
             return result;
         }
@@ -335,12 +327,12 @@ namespace rokono_cl.DatabaseHandlers
         public SqlDataReader ExecuteQuery(string query)
         {
             
-            SqlCommand command = new SqlCommand(query, SqlConnection);
+            SqlCommand command = new SqlCommand(query, _sqlConnection);
             try
             {
-                if (SqlConnection.State != ConnectionState.Open) //try open 
+                if (_sqlConnection.State != ConnectionState.Open) //try open 
                 {
-                    SqlConnection.Open(); 
+                    _sqlConnection.Open(); 
                 }
                 return command.ExecuteReader();
               
@@ -360,7 +352,7 @@ namespace rokono_cl.DatabaseHandlers
             {
                 if (disposing)
                 {
-                    SqlConnection.Close();
+                    _sqlConnection.Close();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

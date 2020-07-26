@@ -10,6 +10,18 @@ namespace RokonoDbManager.Models
         public string Database { get; set; }
         public int ConnectionId { get; set; }
         public string DbContextPath {get; set;}
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string GetConnStr( )
+        {
+            return $"Server={Host};Database={Database};User ID={Username};Password='{Password}';";
+
+        }
         
     }
 }
